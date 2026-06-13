@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="sr-Latn" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Demo - prikaz funkcionalnosti</title>
+<style>
+:root{
+  --gold:#C9A227; --bg:#F2F4F8; --card:#FFFFFF; --txt:#1B2A4A; --muted:#5A6B8C;
+  --line:#D9DEE8; --chip:#E8ECF4; --pos:#1E7B3C; --neg:#C0392B;
+  --head-bg:#1B2A4A; --head-txt:#F2F4F8; --axis:#9AA7BF; --bar:#C9A227;
+  --shadow:0 1px 3px rgba(27,42,74,.12);
+}
+[data-theme="dark"]{
+  --bg:#10182B; --card:#1B2A4A; --txt:#F2F4F8; --muted:#A8B4CC; --line:#2C3D63;
+  --chip:#24355C; --pos:#4CC272; --neg:#E66A5A; --head-bg:#0D1424; --head-txt:#F2F4F8;
+  --axis:#5A6B8C; --shadow:0 1px 3px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{font-family:Calibri,'Segoe UI',system-ui,-apple-system,sans-serif;
+  background:var(--bg);color:var(--txt);font-size:16px;line-height:1.4}
+.wrap{max-width:820px;margin:0 auto;padding:0 10px 30px}
+.hdr{position:sticky;top:0;z-index:50;background:var(--head-bg);color:var(--head-txt);
+  padding:10px 12px;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+.hdr-in{max-width:820px;margin:0 auto}
+.hdr-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.hdr h1{font-size:17px;font-weight:700;flex:1;letter-spacing:.2px}
+.hdr h1 small{display:block;font-size:11px;font-weight:400;color:var(--gold)}
+.tbtn{min-width:44px;min-height:44px;border:1px solid rgba(255,255,255,.25);
+  background:transparent;color:var(--head-txt);border-radius:10px;font-size:19px;cursor:pointer}
+.search{display:flex;align-items:center;background:#fff;border-radius:12px;
+  padding:0 10px;border:2px solid var(--gold)}
+[data-theme="dark"] .search{background:#0D1424}
+.search svg{flex:none;opacity:.55}
+.search input{flex:1;border:0;outline:0;background:transparent;color:var(--txt);
+  font-size:16px;min-height:46px;padding:0 8px;font-family:inherit;width:100%}
+[data-theme="dark"] .search input{color:#F2F4F8}
+.clr{min-width:44px;min-height:44px;border:0;background:transparent;color:var(--muted);
+  font-size:20px;cursor:pointer;display:none}
+.filterrow{display:flex;gap:8px;margin-top:8px}
+.sel{flex:1;min-width:0;min-height:44px;font-size:16px;font-family:inherit;border-radius:10px;
+  border:1px solid rgba(255,255,255,.3);padding:0 10px;background:#fff;color:var(--head-bg);
+  -webkit-appearance:menulist}
+[data-theme="dark"] .sel{background:#0D1424;color:#F2F4F8;border-color:#2C3D63}
+.sel.active{border:2px solid var(--gold)}
+.tgl{flex:none;min-height:44px;padding:0 14px;border-radius:10px;
+  border:1px solid rgba(255,255,255,.3);background:transparent;color:var(--head-txt);
+  font-size:13.5px;font-weight:700;font-family:inherit;cursor:pointer;white-space:nowrap}
+.tgl[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#1B2A4A}
+.hint{font-size:11.5px;color:rgba(242,244,248,.65);margin-top:6px}
+.cnt-row{display:flex;align-items:center;gap:10px;margin:10px 4px 8px}
+.cnt{font-size:13px;color:var(--muted);flex:1;min-width:0}
+.sortseg{flex:none;display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.sortseg button{min-height:44px;padding:0 12px;border:0;background:var(--card);color:var(--muted);
+  font-size:12.5px;font-weight:700;font-family:inherit;cursor:pointer}
+.sortseg button.on{background:var(--gold);color:#1B2A4A}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  margin-bottom:10px;box-shadow:var(--shadow);overflow:hidden}
+.row{display:flex;align-items:center;gap:10px;padding:12px 14px;min-height:62px;cursor:pointer}
+.rank{flex:none;width:40px;height:40px;border-radius:10px;background:var(--chip);
+  display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;color:var(--muted)}
+.rmain{flex:1;min-width:0}
+.rname{font-weight:700;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rsub{font-size:12.5px;color:var(--muted)}
+.chip{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  padding:1px 7px;border-radius:999px;vertical-align:1px;margin-left:6px;background:rgba(201,162,39,.18);color:var(--gold)}
+.chip.g{background:var(--chip);color:var(--muted)}
+.bar{height:6px;border-radius:4px;background:var(--chip);margin-top:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--bar)}
+.rval{flex:none;text-align:right}
+.rval b{display:block;font-size:16px}
+.rval span{font-size:11px;color:var(--muted)}
+.chev{flex:none;color:var(--muted);transition:transform .2s}
+.open .chev{transform:rotate(90deg)}
+.lk{display:none;border-top:1px solid var(--line);padding:14px}
+.open .lk{display:block}
+.sect{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
+  color:var(--gold);margin:14px 0 6px}
+.sect:first-child{margin-top:0}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kpi{background:var(--chip);border-radius:12px;padding:10px 12px}
+.kpi .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.kpi .v{font-size:18px;font-weight:700;margin-top:2px}
+.kpi .v.pos{color:var(--pos)} .kpi .v.neg{color:var(--neg)}
+.chartbox{background:var(--chip);border-radius:12px;padding:12px}
+.chartbox svg{display:block;width:100%;height:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);font-weight:700}
+td.n{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.more{display:block;width:100%;min-height:48px;border:1px dashed var(--gold);border-radius:14px;
+  background:transparent;color:var(--txt);font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:4px}
+.empty{text-align:center;color:var(--muted);padding:40px 16px;font-size:15px}
+footer{margin-top:26px;text-align:center;font-size:11.5px;color:var(--muted);line-height:1.7}
+footer b{color:var(--gold)}
+.note{border:2px solid var(--gold);border-radius:12px;padding:12px 14px;margin:12px 4px 0;
+  font-size:13px;line-height:1.5;background:rgba(201,162,39,.08)}
+.note b{color:var(--gold)}
+@media (min-width:640px){.kpis{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<div class="hdr"><div class="hdr-in">
+  <div class="hdr-top">
+    <h1>Demo prikaz<small>primer interfejsa · izmišljeni podaci</small></h1>
+    <button class="tbtn" id="themeBtn" aria-label="Promena teme">&#9789;</button>
+  </div>
+  <div class="search">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+    <input id="q" type="search" inputmode="search" autocomplete="off" placeholder="Pretraga po nazivu..." aria-label="Pretraga">
+    <button class="clr" id="clrBtn" aria-label="Obriši">&#10005;</button>
+  </div>
+  <div class="filterrow">
+    <select class="sel" id="catSel" aria-label="Filter po grupi"></select>
+    <button class="tgl" id="tgl" aria-pressed="false">Samo istaknuti</button>
+  </div>
+  <div class="hint">Probaj: pretragu, padajući meni (grupa), prekidač, sortiranje, pa klikni stavku za grafikon i tabelu.</div>
+</div></div>
+
+<div class="wrap">
+  <div class="cnt-row">
+    <div class="cnt" id="cnt"></div>
+    <div class="sortseg" role="group" aria-label="Sortiranje">
+      <button id="srtV" class="on">Vrednost</button><button id="srtN">Naziv</button>
+    </div>
+  </div>
+  <div id="list"></div>
+  <button class="more" id="moreBtn" style="display:none">Prikaži još</button>
+  <div class="empty" id="empty" style="display:none">Nema rezultata.</div>
+  <div class="note"><b>Demonstracioni prikaz.</b> Svi nazivi i brojevi su nasumično
+  izmišljeni isključivo radi prikaza funkcionalnosti interfejsa (pretraga, filter,
+  prekidač, sortiranje, tabela, grafikon). Ne predstavljaju nikakve stvarne podatke.</div>
+  <footer>
+    <b>DEMO - izmišljeni podaci</b><br>
+    Primer rasporeda i interakcija na telefonu · svetla/tamna tema (ikona gore desno)
+  </footer>
+</div>
+
+<script>
+"use strict";
+/* ---- seedovani RNG (mulberry32) - stabilni izmišljeni podaci ---- */
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);
+  t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+const R=rng(20260613);
+function ri(a,b){return Math.floor(a+R()*(b-a+1));}
+const MES=["jan","feb","mar","apr","maj","jun","jul","avg","sep","okt","nov","dec"];
+const GRUPE=["Alfa","Bravo","Čarli","Delta"];
+const PRID=["Severni","Južni","Plavi","Zlatni","Tihi","Brzi","Mirni","Visoki","Široki","Daleki","Sunčani","Snežni"];
+const IMEN=["Vrh","Tok","Krug","Most","Luk","Greben","Zaliv","Prsten","Talas","Vidik","Putanja","Polje"];
+
+/* ---- generisanje ~22 izmišljenih stavki ---- */
+const DATA=[];
+const used=new Set();
+for(let i=0;i<22;i++){
+  let nm;do{nm=PRID[ri(0,PRID.length-1)]+" "+IMEN[ri(0,IMEN.length-1)];}while(used.has(nm));
+  used.add(nm);
+  const grupa=GRUPE[ri(0,3)];
+  const val=ri(18,98);
+  const ist=R()<0.35;
+  const base=ri(20,80);
+  const trend=[];for(let m=0;m<12;m++){trend.push(Math.max(2,base+Math.round(Math.sin(m/2)*10)+ri(-8,8)));}
+  trend[11]=val; // poslednji = prikazana vrednost
+  const nsub=ri(3,5);const sub=[];let rem=val;
+  for(let s=0;s<nsub;s++){const part=s===nsub-1?Math.max(1,rem):Math.max(1,Math.round(rem*(0.2+R()*0.4)));rem-=part;
+    sub.push(["Segment "+String.fromCharCode(65+s),Math.max(1,part)]);}
+  DATA.push({id:i,naziv:nm,grupa:grupa,vrednost:val,istaknut:ist,trend:trend,sub:sub,kod:"DX-"+(1000+i)});
+}
+
+/* ---- helpers ---- */
+function norm(s){s=(s||"").toLowerCase();const D={"š":"s","č":"c","ć":"c","ž":"z","đ":"dj"};
+  let o="";for(const c of s)o+=D[c]||c;return o;}
+const SEARCH=DATA.map(d=>norm(d.naziv+" "+d.kod));
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+const maxVal=Math.max(...DATA.map(d=>d.vrednost));
+
+/* ---- linijski grafikon (SVG) ---- */
+function lineChart(vals,labels){
+  const W=320,H=120,pL=22,pR=8,pT=14,pB=22;
+  let mn=Math.min(...vals),mx=Math.max(...vals);if(mn===mx){mn-=1;mx+=1;}
+  const X=i=>pL+i*(W-pL-pR)/(vals.length-1);
+  const Y=v=>pT+(mx-v)*(H-pT-pB)/(mx-mn);
+  let path="";vals.forEach((v,i)=>{path+=(i?" L":"M")+X(i).toFixed(1)+" "+Y(v).toFixed(1);});
+  let dots="";vals.forEach((v,i)=>{dots+='<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(v).toFixed(1)+'" r="2.4" fill="var(--gold)"/>';});
+  let yl="";labels.forEach((l,i)=>{if(i%2)return;yl+='<text x="'+X(i).toFixed(1)+'" y="'+(H-6)+'" font-size="9" fill="var(--axis)" text-anchor="middle">'+l+'</text>';});
+  const g0=Y(mn),g1=Y((mn+mx)/2),g2=Y(mx);
+  let grid="";[g0,g1,g2].forEach(y=>{grid+='<line x1="'+pL+'" y1="'+y.toFixed(1)+'" x2="'+(W-pR)+'" y2="'+y.toFixed(1)+'" stroke="var(--line)" stroke-width="1"/>';});
+  let yv='<text x="2" y="'+(g2+3).toFixed(1)+'" font-size="9" fill="var(--axis)">'+mx+'</text>'+
+         '<text x="2" y="'+(g0+3).toFixed(1)+'" font-size="9" fill="var(--axis)">'+mn+'</text>';
+  return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Grafikon trenda">'+grid+
+    '<path d="'+path+'" fill="none" stroke="var(--gold)" stroke-width="2"/>'+dots+yl+yv+'</svg>';
+}
+
+/* ---- render ---- */
+const list=document.getElementById("list"),cnt=document.getElementById("cnt"),
+  moreBtn=document.getElementById("moreBtn"),emptyEl=document.getElementById("empty"),
+  q=document.getElementById("q"),clrBtn=document.getElementById("clrBtn");
+const CHUNK=10;let cur=[],shown=0;
+
+function rowHTML(d,rank){
+  return '<div class="card" id="c'+d.id+'">'+
+    '<div class="row" onclick="tg('+d.id+')" role="button" aria-expanded="false">'+
+      '<div class="rank">'+rank+'.</div>'+
+      '<div class="rmain"><div class="rname">'+esc(d.naziv)+
+        '<span class="chip'+(d.istaknut?'':' g')+'">'+(d.istaknut?'istaknut':d.grupa)+'</span></div>'+
+        '<div class="rsub">'+esc(d.kod)+' · grupa '+esc(d.grupa)+'</div>'+
+        '<div class="bar"><i style="width:'+(100*d.vrednost/maxVal).toFixed(0)+'%"></i></div>'+
+      '</div>'+
+      '<div class="rval"><b>'+d.vrednost+'</b><span>indeks</span></div>'+
+      '<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 5 16 12 9 19"/></svg>'+
+    '</div><div class="lk" id="lk'+d.id+'"></div></div>';
+}
+function lkHTML(d){
+  const prev=d.trend[10],last=d.trend[11],diff=last-prev;
+  const dCls=diff>0?"pos":(diff<0?"neg":"");
+  const dTxt=(diff>0?"+":"")+diff;
+  const prosek=Math.round(d.trend.reduce((a,b)=>a+b,0)/d.trend.length);
+  let rows="";d.sub.forEach(s=>{rows+='<tr><td>'+esc(s[0])+'</td><td class="n">'+s[1]+'</td><td class="n">'+
+    (100*s[1]/d.vrednost).toFixed(0)+'%</td></tr>';});
+  return '<div class="sect">Pokazatelji</div>'+
+    '<div class="kpis">'+
+      '<div class="kpi"><div class="l">Indeks</div><div class="v">'+d.vrednost+'</div></div>'+
+      '<div class="kpi"><div class="l">Promena m/m</div><div class="v '+dCls+'">'+dTxt+'</div></div>'+
+      '<div class="kpi"><div class="l">Prosek 12m</div><div class="v">'+prosek+'</div></div>'+
+      '<div class="kpi"><div class="l">Grupa</div><div class="v">'+esc(d.grupa)+'</div></div>'+
+    '</div>'+
+    '<div class="sect">Grafikon - trend (12 meseci)</div>'+
+    '<div class="chartbox">'+lineChart(d.trend,MES)+'</div>'+
+    '<div class="sect">Tabela - struktura</div>'+
+    '<table><thead><tr><th>Segment</th><th class="n">Vrednost</th><th class="n">Udeo</th></tr></thead>'+
+    '<tbody>'+rows+'</tbody></table>';
+}
+window.tg=function(id){const c=document.getElementById("c"+id),lk=document.getElementById("lk"+id);
+  if(!c.classList.contains("open")&&!lk.innerHTML)lk.innerHTML=lkHTML(DATA[id]);
+  c.classList.toggle("open");
+  c.querySelector(".row").setAttribute("aria-expanded",c.classList.contains("open"));};
+
+function renderChunk(){let h="";const end=Math.min(shown+CHUNK,cur.length);
+  for(let i=shown;i<end;i++)h+=rowHTML(DATA[cur[i][0]],cur[i][1]);
+  list.insertAdjacentHTML("beforeend",h);shown=end;
+  moreBtn.style.display=shown<cur.length?"block":"none";
+  moreBtn.textContent="Prikaži još ("+(cur.length-shown)+")";}
+function setResults(arr,label){cur=arr;shown=0;list.innerHTML="";
+  emptyEl.style.display=arr.length?"none":"block";cnt.textContent=label;renderChunk();}
+
+/* ---- filteri + sort ---- */
+const catSel=document.getElementById("catSel"),tgl=document.getElementById("tgl");
+let fCat="",fIst=false,sortBy="v";
+(function(){let h='<option value="">Sve grupe</option>';
+  GRUPE.forEach(g=>{const n=DATA.filter(d=>d.grupa===g).length;h+='<option value="'+g+'">Grupa '+g+' ('+n+')</option>';});
+  catSel.innerHTML=h;})();
+function doSearch(){
+  const raw=q.value.trim();clrBtn.style.display=raw?"block":"none";
+  catSel.classList.toggle("active",!!fCat);tgl.setAttribute("aria-pressed",fIst?"true":"false");
+  const nq=norm(raw);const out=[];
+  for(let i=0;i<DATA.length;i++){const d=DATA[i];
+    if(fCat&&d.grupa!==fCat)continue;
+    if(fIst&&!d.istaknut)continue;
+    if(raw&&SEARCH[i].indexOf(nq)===-1)continue;
+    out.push([i,0]);}
+  if(sortBy==="v")out.sort((a,b)=>DATA[b[0]].vrednost-DATA[a[0]].vrednost);
+  else out.sort((a,b)=>DATA[a[0]].naziv.localeCompare(DATA[b[0]].naziv,"sr-Latn"));
+  out.forEach((o,i)=>o[1]=i+1);
+  let label;
+  if(raw)label=out.length+(out.length===1?" rezultat":" rezultata")+" za „"+raw+"“";
+  else if(fCat||fIst)label=out.length+" stavki"+(fCat?" · grupa "+fCat:"")+(fIst?" · istaknuti":"");
+  else label=DATA.length+" stavki (demo)";
+  setResults(out,label);}
+document.getElementById("srtV").addEventListener("click",function(){sortBy="v";this.classList.add("on");document.getElementById("srtN").classList.remove("on");doSearch();});
+document.getElementById("srtN").addEventListener("click",function(){sortBy="n";this.classList.add("on");document.getElementById("srtV").classList.remove("on");doSearch();});
+catSel.addEventListener("change",()=>{fCat=catSel.value;doSearch();});
+tgl.addEventListener("click",()=>{fIst=!fIst;doSearch();});
+let deb;q.addEventListener("input",()=>{clearTimeout(deb);deb=setTimeout(doSearch,120);});
+clrBtn.addEventListener("click",()=>{q.value="";doSearch();q.focus();});
+moreBtn.addEventListener("click",renderChunk);
+
+/* ---- tema ---- */
+const tb=document.getElementById("themeBtn");
+function setTheme(t){document.documentElement.setAttribute("data-theme",t);
+  tb.innerHTML=t==="dark"?"&#9788;":"&#9789;";try{localStorage.setItem("demo_theme",t);}catch(e){}}
+tb.addEventListener("click",()=>setTheme(document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark"));
+try{const s=localStorage.getItem("demo_theme");if(s)setTheme(s);}catch(e){}
+doSearch();
+</script>
+</body>
+</html>
